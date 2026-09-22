@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#4f46e5" />
+  <meta name="description" content="Find and redact PII in your browser. Nothing is uploaded." />
+  <title>PII Redact — highlight &amp; redact personal data</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main>
+    <header>
+      <h1>PII Redact</h1>
+      <p class="sub">Paste text, find personal data, redact it. Everything stays on your device — nothing is uploaded.</p>
+    </header>
+
+    <div class="row">
+      <button type="button" class="primary" id="pasteBtn">Paste</button>
+      <button type="button" class="ghost" id="demoBtn">Load demo text</button>
+      <button type="button" class="ghost" id="clearBtn">Clear</button>
+      <label class="file-btn ghost" for="pdfInput">Load PDF text</label>
+      <input type="file" id="pdfInput" accept="application/pdf,.pdf" hidden />
+    </div>
+
+    <label class="lbl" for="input">Text</label>
+    <textarea id="input" rows="10" placeholder="Paste notes, emails, logs, or forms here…" autocomplete="off" spellcheck="false"></textarea>
+
+    <section class="card" id="detectors">
+      <h2>Detectors</h2>
+      <div class="toggles" id="toggles"></div>
+      <p class="hint">DOB-like dates are best-effort and may flag non-PII dates.</p>
+    </section>
+
+    <div class="row">
+      <button type="button" class="primary" id="scanBtn">Scan</button>
+      <button type="button" class="ghost" id="redactAllBtn" disabled>Redact all</button>
+      <button type="button" class="ghost" id="undoBtn" disabled>Undo</button>
+    </div>
+
+    <section class="card" id="modeCard">
+      <h2>Redact mode</h2>
+      <div class="mode-row">
+        <label class="mode"><input type="radio" name="mode" value="bars" checked /> Black bars (█)</label>
+        <label class="mode"><input type="radio" name="mode" value="tag" /> <code>[REDACTED:TYPE]</code></label>
+      </div>
+    </section>
+
+    <section class="card" id="counts" hidden>
+      <h2>Findings</h2>
+      <div class="chips" id="chips"></div>
+      <div class="row tight">
+        <button type="button" class="ghost sm" id="redactByTypeBtn" disabled>Redact by type…</button>
+      </div>
+      <div id="typePicker" class="type-picker" hidden></div>
+    </section>
+
+    <label class="lbl">Highlight preview</label>
+    <div class="preview" id="preview" aria-live="polite"><span class="muted-empty">Scan to see highlighted PII.</span></div>
+
+    <label class="lbl" for="output">Redacted text</label>
+    <textarea id="output" rows="8" readonly placeholder="Redacted text appears here"></textarea>
+
+    <div class="row">
+      <button type="button" class="primary" id="copyBtn" disabled>Copy redacted text</button>
+    </div>
+
+    <details class="card">
+      <summary>Privacy &amp; limits</summary>
+      <p>Scanning and redaction run entirely in your browser. Text and PDFs never leave this device. PDF support extracts text only (via pdf.js from CDN); visual black-box redaction of PDF pages is out of scope. Detectors are pattern-based — expect false positives/negatives. Credit cards use a Luhn check; SSNs match common formats only.</p>
+    </details>
+  </main>
+  <footer>
+    Free &amp; open source · <a href="https://github.com/shaikbasha1437/piiredact">GitHub</a>
+  </footer>
+  <div class="toast" id="toast" hidden>Copied</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
+  </script>
+</body>
+</html>
