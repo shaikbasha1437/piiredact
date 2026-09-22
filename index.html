@@ -14,7 +14,7 @@
   <main>
     <header>
       <h1>PII Redact</h1>
-      <p class="sub">Paste text, find personal data, redact it. Everything stays on your device — nothing is uploaded.</p>
+      <p class="sub">Paste text, load a PDF or image, find personal data, redact it. Everything stays on your device — nothing is uploaded.</p>
     </header>
 
     <div class="row">
@@ -23,6 +23,16 @@
       <button type="button" class="ghost" id="clearBtn">Clear</button>
       <label class="file-btn ghost" for="pdfInput">Load PDF text</label>
       <input type="file" id="pdfInput" accept="application/pdf,.pdf" hidden />
+      <label class="file-btn ghost" for="imageInput">Load image</label>
+      <input type="file" id="imageInput" accept="image/png,image/jpeg,image/webp,image/gif,.png,.jpg,.jpeg,.webp,.gif" hidden />
+    </div>
+
+    <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Drop an image here to OCR">
+      <p><strong>Drop an image</strong> here (PNG, JPEG, WebP, GIF) — or use <em>Load image</em>. OCR runs in your browser.</p>
+      <div class="ocr-progress" id="ocrProgress" hidden>
+        <div class="ocr-bar"><div class="ocr-bar-fill" id="ocrBarFill"></div></div>
+        <span class="ocr-pct" id="ocrPct">0%</span>
+      </div>
     </div>
 
     <label class="lbl" for="input">Text</label>
@@ -60,6 +70,17 @@
     <label class="lbl">Highlight preview</label>
     <div class="preview" id="preview" aria-live="polite"><span class="muted-empty">Scan to see highlighted PII.</span></div>
 
+    <section class="card" id="imageCard" hidden>
+      <h2>Image redaction</h2>
+      <p class="hint" id="imageHint">Black boxes mark OCR words that overlap detected PII. Download stays on-device.</p>
+      <div class="canvas-wrap">
+        <canvas id="redactCanvas" aria-label="Redacted image preview"></canvas>
+      </div>
+      <div class="row tight">
+        <button type="button" class="primary" id="downloadImageBtn" disabled>Download redacted image</button>
+      </div>
+    </section>
+
     <label class="lbl" for="output">Redacted text</label>
     <textarea id="output" rows="8" readonly placeholder="Redacted text appears here"></textarea>
 
@@ -69,7 +90,7 @@
 
     <details class="card">
       <summary>Privacy &amp; limits</summary>
-      <p>Scanning and redaction run entirely in your browser. Text and PDFs never leave this device. PDF support extracts text only (via pdf.js from CDN); visual black-box redaction of PDF pages is out of scope. Detectors are pattern-based — expect false positives/negatives. Credit cards use a Luhn check; SSNs match common formats only.</p>
+      <p>Scanning and redaction run entirely in your browser. Text, PDFs, and images never leave this device. PDF support extracts text only (via pdf.js from CDN). Image OCR uses <strong>Tesseract.js</strong> (English only) loaded from a CDN on first use, including the <code>eng</code> traineddata — after that it can be cached by your browser. Visual black-box redaction maps PII substrings to OCR word boxes (fuzzy); handwriting and non-English text are unreliable. Detectors are pattern-based — expect false positives/negatives. Credit cards use a Luhn check; SSNs match common formats only.</p>
     </details>
   </main>
   <footer>
@@ -77,6 +98,7 @@
   </footer>
   <div class="toast" id="toast" hidden>Copied</div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script src="app.js"></script>
   <script>
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});

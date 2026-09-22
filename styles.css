@@ -235,6 +235,80 @@ footer a { color: #c4b5fd; }
   z-index: 20;
 }
 
+.dropzone {
+  margin-top: 0.75rem;
+  border: 1.5px dashed #4338ca;
+  border-radius: 16px;
+  padding: 0.85rem 1rem;
+  background: #12182a;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+  transition: border-color 0.15s, background 0.15s;
+  cursor: pointer;
+}
+
+.dropzone strong { color: #c7d2fe; }
+.dropzone em { font-style: normal; color: #a5b4fc; }
+
+.dropzone.dragover {
+  border-color: #a78bfa;
+  background: #1e1b4b88;
+}
+
+.dropzone:focus-visible {
+  outline: 2px solid #818cf866;
+}
+
+.ocr-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 0.65rem;
+}
+
+.ocr-bar {
+  flex: 1;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: #0a0f1c;
+  border: 1px solid #312e81;
+  overflow: hidden;
+}
+
+.ocr-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #6366f1, #a78bfa);
+  transition: width 0.12s ease-out;
+}
+
+.ocr-pct {
+  font-weight: 800;
+  font-size: 0.8rem;
+  color: #c7d2fe;
+  min-width: 2.75rem;
+  text-align: right;
+}
+
+.canvas-wrap {
+  margin-top: 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #0a0f1c;
+  overflow: auto;
+  max-height: 28rem;
+}
+
+#redactCanvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  vertical-align: top;
+}
+
+#imageCard .hint { margin-top: 0; margin-bottom: 0.25rem; }
+
 @media (max-width: 480px) {
   h1 { font-size: 1.55rem; }
   button, .file-btn { flex: 1 1 auto; }
